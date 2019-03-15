@@ -164,7 +164,7 @@ class TumblrRestClient(object):
         """
         url = "/v2/blog/{}/following".format(blogname)
         return self.send_api_request("get", url, kwargs, ['limit', 'offset'])
-    
+
     @validate_blogname
     def followers(self, blogname, **kwargs):
         """
@@ -449,6 +449,21 @@ class TumblrRestClient(object):
             # Take a list of tags and make them acceptable for upload
             kwargs['tags'] = ",".join(kwargs['tags'])
         return self.send_api_request('post', url, kwargs, valid_options)
+
+    @validate_blogname
+    def answer_ask(self, blogname, post_id, answer):
+        """
+        Answers an ask. aka Replies to a question.
+
+        :param blogname: a string, the url of the blog you want to reblog to
+        :param id: an int, the post id to answer
+        :param answer: a string, the answer to the question to post.
+        """
+        url = "/v2/blog/{}/question/reply".format(blogname)
+
+        params = {'post_id': post_id, 'answer': answer}
+        valid_options = ['post_id', 'answer']
+        return self.send_api_request('post', url, params, valid_options, True)
 
     @validate_blogname
     def delete_post(self, blogname, id):
